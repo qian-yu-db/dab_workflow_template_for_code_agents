@@ -1,0 +1,3 @@
+[submodule ".claude/skills-repo"]
+	path = .claude/skills-repo
+	url = https://github.com/qian-yu-db/custom-claude-skills
