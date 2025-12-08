@@ -1,0 +1,37 @@
+bundle:
+  name: document_processing_pipeline
+
+variables:
+  catalog:
+    description: Unity Catalog name
+    default: fins_genai
+  schema:
+    description: Schema name for tables
+    default: unstructured_documents
+  source_volume_path:
+    description: Source volume path for input documents
+    default: /Volumes/${var.catalog}/${var.schema}/ai_parse_document_workflow/inputs/
+  output_volume_path:
+    description: Output volume path for processed documents
+    default: /Volumes/${var.catalog}/${var.schema}/ai_parse_document_workflow/outputs/
+  checkpoint_base_path:
+    description: Checkpoint base path for streaming
+    default: checkpoints/ai_parse_document_workflow
+  clean_pipeline_tables:
+    description: Whether to clean pipeline tables (Yes/No)
+    default: "No"
+
+include:
+  - resources/*.yml
+
+targets:
+  dev:
+    mode: development
+    default: true
+    workspace:
+      host: https://e2-demo-field-eng.cloud.databricks.com
+
+  prod:
+    mode: production
+    workspace:
+      host: https://e2-demo-field-eng.cloud.databricks.com

@@ -1,0 +1,46 @@
+resources:
+  jobs:
+    document_processing_pipeline_job:
+      name: document_processing_pipeline_job
+
+      # Serverless environment configuration
+      environments:
+        - environment_key: serverless_env
+          spec:
+            client: "3"
+
+      tasks:
+        - task_key: clean_pipeline_tables
+          environment_key: serverless_env
+          notebook_task:
+            notebook_path: ../notebooks/00-clean-pipeline-tables.py
+            base_parameters:
+              catalog: ${var.catalog}
+              schema: ${var.schema}
+              output_volume_path: ${var.output_volume_path}
+              clean_pipeline_tables: ${var.clean_pipeline_tables}
+              checkpoint_base_path: ${var.checkpoint_base_path}
+
+        - task_key: parse_documents
+          environment_key: serverless_env
+          depends_on:
+            - task_key: clean_pipeline_tables
+          notebook_task:
+            notebook_path: ../notebooks/01_parse_documents.py
+            base_parameters:
+              catalog: ${var.catalog}
+              schema: ${var.schema}
+              source_volume_path: ${var.source_volume_path}
+              output_volume_path: ${var.output_volume_path}
+
+        - task_key: extract_document_content
+          environment_key: serverless_env
+          depends_on:
+            - task_key: parse_documents
+          notebook_task:
+            notebook_path: ../notebooks/02_extract_document_content.py
+            base_parameters:
+              catalog: ${var.catalog}
+              schema: ${var.schema}
+
+      max_concurrent_runs: 1

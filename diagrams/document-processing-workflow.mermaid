@@ -1,0 +1,27 @@
+flowchart TB
+    subgraph "Document Processing Pipeline"
+        direction TB
+
+        Start([Start Pipeline]) --> Clean
+
+        Clean["00-clean-pipeline-tables<br>Clean Pipeline Tables"]
+        Clean --> |"Ensure directories exist<br>Optional: clean tables"| Parse
+
+        Parse["01_parse_documents<br>Parse Documents"]
+        Parse --> |"Read PDFs/Images<br>ai_parse_document"| Extract
+
+        Extract["02_extract_document_content<br>Extract Document Content"]
+        Extract --> End([Pipeline Complete])
+    end
+
+    subgraph "Data Flow"
+        direction LR
+        Source[(Source Volume<br>PDFs/Images)] -.-> Parse
+        Parse -.-> RawTable[(parsed_documents_raw<br>Delta Table)]
+        RawTable -.-> Extract
+        Extract -.-> ContentTable[(parsed_documents_content<br>Delta Table)]
+    end
+
+    style Clean fill:#ffb366,stroke:#333
+    style Parse fill:#66b3ff,stroke:#333
+    style Extract fill:#66ff66,stroke:#333
