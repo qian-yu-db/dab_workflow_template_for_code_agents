@@ -1,12 +1,19 @@
 # DAB Workflow Template for Code Agents
 
-A template for creating, testing, and deploying Databricks workflows using AI code agents (Claude Code, Codex CLI, Gemini CLI). This template leverages Databricks Asset Bundles (DAB) for infrastructure-as-code workflow management with serverless compute.
+A template for creating, testing, and deploying Databricks workflows using AI code agents. This template leverages Databricks Asset Bundles (DAB) for infrastructure-as-code workflow management with serverless compute.
+
+**Supported AI Code Agents:** Claude Code | OpenAI Codex CLI | Google Gemini CLI
+
+> **Multi-Platform Support**: This template includes platform-specific instruction files (`CLAUDE.md`, `AGENTS.md`, `GEMINI.md`) so you can use your preferred AI coding assistant. See [Cross-Platform AI Agent Support](#cross-platform-ai-agent-support) for details.
 
 ## Prerequisites
 
 - [Databricks CLI](https://docs.databricks.com/dev-tools/cli/index.html) configured with workspace profiles
 - [uv](https://github.com/astral-sh/uv) for Python package management
-- Claude Code (or compatible AI code agent) with skills support
+- One of the supported AI code agents:
+  - [Claude Code](https://claude.ai/claude-code) (Anthropic)
+  - [Codex CLI](https://github.com/openai/codex) (OpenAI)
+  - [Gemini CLI](https://github.com/google/gemini-cli) (Google)
 
 ## Project Structure
 
@@ -22,6 +29,9 @@ A template for creating, testing, and deploying Databricks workflows using AI co
 ├── notebooks/                # Databricks notebooks
 ├── configs/                  # Configuration files
 ├── pyproject.toml           # Python project config (uv)
+├── CLAUDE.md                # Claude Code instructions
+├── AGENTS.md                # Codex CLI instructions
+├── GEMINI.md                # Gemini CLI instructions
 └── README.md
 ```
 
@@ -102,6 +112,8 @@ Here's an example workflow instruction you can give to your AI code agent:
 6. Update the README to document the asset bundle with the workflow diagram
 ```
 
+You can find a working example in the [document_parsing_workflow_example](https://github.com/qian-yu-db/dab_workflow_template_for_code_agents/tree/document_parsing_workflow_example) branch.
+
 ## Development Workflow
 
 1. **Visualize**: Create a Mermaid diagram of your workflow
@@ -110,3 +122,32 @@ Here's an example workflow instruction you can give to your AI code agent:
 4. **Format**: Run formatters to ensure code quality
 5. **Bundle**: Generate DAB configuration from notebooks
 6. **Deploy**: Use `databricks bundle deploy` to deploy to Databricks
+
+## Cross-Platform AI Agent Support
+
+This template supports multiple AI coding assistants with platform-specific instruction files:
+
+| Platform | Instruction File | Description |
+|----------|-----------------|-------------|
+| Claude Code | `CLAUDE.md` | Instructions for Anthropic's Claude Code CLI |
+| Codex CLI | `AGENTS.md` | Instructions for OpenAI's Codex CLI |
+| Gemini CLI | `GEMINI.md` | Instructions for Google's Gemini CLI |
+
+All instruction files contain equivalent guidance adapted for each platform's conventions. The skills in `.claude/skills/` work with all platforms as they use standard Python and bash commands.
+
+### Using with Different Agents
+
+**Claude Code:**
+```bash
+claude  # Skills auto-detected from .claude/skills/
+```
+
+**Codex CLI:**
+```bash
+codex  # Reads AGENTS.md for instructions
+```
+
+**Gemini CLI:**
+```bash
+gemini  # Reads GEMINI.md for instructions
+```
